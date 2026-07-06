@@ -1,9 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_ripples": {
       "type": "hero-ripples",
       "settings": {
+        "background_image": "shopify://shop_images/donyale-luna-1.jpg",
         "heading": "Random Object",
+        "audio_url": "",
+        "audio_label": "Play mix",
         "mix_label": "June 2026 Mix:",
         "mix_title": "Aural Imbalance",
         "scroll_hint": "Scroll",
@@ -14,9 +26,13 @@
       "type": "featured-collection",
       "settings": {
         "heading": "Featured products",
+        "collection": "",
         "products_to_show": 6
       }
     }
   },
-  "order": ["hero_ripples", "featured_collection"]
+  "order": [
+    "hero_ripples",
+    "featured_collection"
+  ]
 }
