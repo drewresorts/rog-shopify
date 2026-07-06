@@ -1,0 +1,13 @@
+{
+  "name": "t:general.header",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": ["header"]
+}

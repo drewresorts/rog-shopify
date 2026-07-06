@@ -1,0 +1,347 @@
+{%- liquid
+  assign background_image = section.settings.background_image
+  assign featured_image = section.settings.featured_image
+  assign image_url = background_image | image_url: width: 2400
+-%}
+
+<section
+  id="HeroRipples-{{ section.id }}"
+  class="hero-ripples"
+  data-ripples-section
+  data-image-url="{{ image_url | escape }}"
+  style="--hero-min-height: {{ section.settings.min_height }}vh;"
+>
+  <div class="hero-ripples__background" data-ripples-target aria-hidden="true"></div>
+
+  <div class="hero-ripples__content">
+    <div class="hero-ripples__intro">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="hero-ripples__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      <hr class="hero-ripples__divider" aria-hidden="true">
+
+      {%- if section.settings.audio_url != blank -%}
+        <div class="hero-ripples__audio">
+          <audio controls preload="none" src="{{ section.settings.audio_url }}">
+            <a href="{{ section.settings.audio_url }}">{{ section.settings.audio_label }}</a>
+          </audio>
+          {%- if section.settings.mix_label != blank -%}
+            <p class="hero-ripples__mix-label">{{ section.settings.mix_label }}</p>
+          {%- endif -%}
+          {%- if section.settings.mix_title != blank -%}
+            <p class="hero-ripples__mix-title">{{ section.settings.mix_title }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if featured_image != blank -%}
+      <figure class="hero-ripples__featured">
+        {{
+          featured_image
+          | image_url: width: 1200
+          | image_tag:
+            class: 'hero-ripples__featured-image',
+            loading: 'eager',
+            widths: '400, 600, 800, 1000, 1200',
+            sizes: '(min-width: 990px) 32rem, 70vw',
+            alt: featured_image.alt | default: section.settings.heading
+        }}
+      </figure>
+    {%- endif -%}
+
+    {%- if section.settings.scroll_hint != blank -%}
+      <p class="hero-ripples__scroll-hint">{{ section.settings.scroll_hint }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .hero-ripples {
+    position: relative;
+    min-height: var(--hero-min-height);
+    overflow: hidden;
+    color: #fff;
+  }
+
+  .hero-ripples__background {
+    position: absolute;
+    inset: 0;
+    background-color: #111;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .hero-ripples__content {
+    position: relative;
+    z-index: 2;
+    min-height: var(--hero-min-height);
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    padding: 12rem 2.4rem 6rem;
+    pointer-events: none;
+  }
+
+  .hero-ripples__intro {
+    max-width: 48rem;
+    pointer-events: auto;
+  }
+
+  .hero-ripples__heading {
+    margin: 0 0 2.4rem;
+    font-size: clamp(3.6rem, 8vw, 7.2rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .hero-ripples__divider {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    margin: 0 0 2.4rem;
+  }
+
+  .hero-ripples__audio {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 28rem;
+  }
+
+  .hero-ripples__audio audio {
+    width: 100%;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .hero-ripples__mix-label,
+  .hero-ripples__mix-title {
+    margin: 0;
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .hero-ripples__featured {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -42%);
+    width: min(32rem, 70vw);
+    margin: 0;
+    pointer-events: auto;
+  }
+
+  .hero-ripples__featured-image {
+    width: 100%;
+    box-shadow: 0 2.4rem 6rem rgba(0, 0, 0, 0.35);
+  }
+
+  .hero-ripples__scroll-hint {
+    position: absolute;
+    right: 2.4rem;
+    bottom: 2.4rem;
+    margin: 0;
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .hero-ripples__content {
+      padding-top: 14rem;
+    }
+
+    .hero-ripples__featured {
+      position: relative;
+      top: auto;
+      left: auto;
+      transform: none;
+      margin: 4rem auto 0;
+    }
+
+    .hero-ripples__scroll-hint {
+      position: static;
+      margin-top: 3.2rem;
+      text-align: right;
+    }
+  }
+{% endstylesheet %}
+
+<script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+<script src="{{ 'jquery.ripples.js' | asset_url }}" defer></script>
+
+{% javascript %}
+  function whenRipplesReady(callback) {
+    if (typeof window.jQuery !== 'undefined' && typeof window.jQuery.fn.ripples === 'function') {
+      callback();
+      return;
+    }
+
+    window.setTimeout(() => whenRipplesReady(callback), 50);
+  }
+
+  function initHeroRipples(section) {
+    const target = section.querySelector('[data-ripples-target]');
+    const imageUrl = section.dataset.imageUrl;
+
+    if (!target || !imageUrl || typeof window.jQuery === 'undefined') {
+      return;
+    }
+
+    const $ = window.jQuery;
+    const $target = $(target);
+
+    $target.css({
+      backgroundImage: 'url("' + imageUrl + '")'
+    });
+
+    try {
+      $target.ripples({
+        resolution: 512,
+        dropRadius: 20,
+        perturbance: 0.04,
+        interactive: true
+      });
+    } catch (error) {
+      return;
+    }
+
+    let lastX = 0;
+    let lastY = 0;
+
+    section.addEventListener('pointermove', (event) => {
+      const rect = target.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+        return;
+      }
+
+      const distance = Math.hypot(x - lastX, y - lastY);
+
+      if (distance > 12) {
+        $target.ripples('drop', x, y, 12, 0.02);
+        lastX = x;
+        lastY = y;
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if ($target.data('ripples')) {
+        $target.ripples('updateSize');
+      }
+    });
+  }
+
+  function bootRipples() {
+    whenRipplesReady(() => {
+      document.querySelectorAll('[data-ripples-section]').forEach((section) => {
+        initHeroRipples(section);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootRipples);
+  } else {
+    bootRipples();
+  }
+
+  document.addEventListener('shopify:section:load', (event) => {
+    const section = event.target.querySelector('[data-ripples-section]');
+    if (section) {
+      whenRipplesReady(() => initHeroRipples(section));
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', (event) => {
+    const section = event.target.querySelector('[data-ripples-section]');
+    if (!section || typeof window.jQuery === 'undefined') {
+      return;
+    }
+
+    const target = section.querySelector('[data-ripples-target]');
+    if (target && window.jQuery(target).data('ripples')) {
+      window.jQuery(target).ripples('destroy');
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.hero_ripples.name",
+  "tag": "section",
+  "class": "section-hero-ripples",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:sections.hero_ripples.settings.background_image.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "featured_image",
+      "label": "t:sections.hero_ripples.settings.featured_image.label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.hero_ripples.settings.heading.label",
+      "default": "Random Object"
+    },
+    {
+      "type": "url",
+      "id": "audio_url",
+      "label": "t:sections.hero_ripples.settings.audio_url.label"
+    },
+    {
+      "type": "text",
+      "id": "audio_label",
+      "label": "t:sections.hero_ripples.settings.audio_label.label",
+      "default": "Play mix"
+    },
+    {
+      "type": "text",
+      "id": "mix_label",
+      "label": "t:sections.hero_ripples.settings.mix_label.label",
+      "default": "June 2026 Mix:"
+    },
+    {
+      "type": "text",
+      "id": "mix_title",
+      "label": "t:sections.hero_ripples.settings.mix_title.label",
+      "default": "Aural Imbalance"
+    },
+    {
+      "type": "text",
+      "id": "scroll_hint",
+      "label": "t:sections.hero_ripples.settings.scroll_hint.label",
+      "default": "Scroll"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "t:sections.hero_ripples.settings.min_height.label",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero_ripples.name"
+    }
+  ]
+}
+{% endschema %}
