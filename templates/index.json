@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "hero_ripples": {
+      "type": "hero-ripples",
+      "settings": {
+        "heading": "Random Object",
+        "mix_label": "June 2026 Mix:",
+        "mix_title": "Aural Imbalance",
+        "scroll_hint": "Scroll",
+        "min_height": 100
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Featured products",
+        "products_to_show": 6
+      }
+    }
+  },
+  "order": ["hero_ripples", "featured_collection"]
+}

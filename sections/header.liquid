@@ -1,0 +1,87 @@
+<header class="site-header" role="banner">
+  <nav class="site-header__nav" aria-label="{{ 'accessibility.main_navigation' | t }}">
+    <ul class="site-header__list">
+      {%- for link in section.settings.menu.links -%}
+        <li class="site-header__item">
+          <a class="site-header__link" href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- endfor -%}
+      <li class="site-header__item">
+        <a class="site-header__link" href="{{ routes.cart_url }}">{{ 'header.cart' | t }}</a>
+        <span class="site-header__clock" data-live-clock aria-hidden="true"></span>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+{% stylesheet %}
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    padding: 2.4rem 2.4rem 0;
+    pointer-events: none;
+  }
+
+  .site-header__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .site-header__item {
+    pointer-events: auto;
+  }
+
+  .site-header__link {
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease;
+  }
+
+  .site-header__link:hover,
+  .site-header__link:focus-visible {
+    opacity: 0.7;
+  }
+
+  .site-header__clock {
+    display: inline-block;
+    margin-left: 0.8rem;
+    color: var(--color-accent);
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  function updateClock() {
+    document.querySelectorAll('[data-live-clock]').forEach((el) => {
+      el.textContent = new Date().toLocaleTimeString();
+    });
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:sections.header.settings.menu.label",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}
