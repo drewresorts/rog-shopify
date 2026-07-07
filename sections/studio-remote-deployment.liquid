@@ -1,0 +1,424 @@
+<section
+  id="StudioRemote-{{ section.id }}"
+  class="studio-remote"
+  data-studio-section
+>
+  <div class="studio-remote__header">
+    <div class="studio-remote__intro">
+      <p class="studio-remote__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1 class="studio-remote__heading">{{ section.settings.heading }}</h1>
+      <p class="studio-remote__description">{{ section.settings.description }}</p>
+    </div>
+
+    <div class="studio-remote__serial-panel">
+      <span class="studio-remote__serial-label">{{ section.settings.serial_label }}</span>
+      <code class="studio-remote__serial" data-studio-serial>RO.GS.v0.26.00000</code>
+      <button type="button" class="studio-remote__btn studio-remote__btn--ghost" data-studio-new-serial>
+        {{ section.settings.new_serial_label }}
+      </button>
+    </div>
+  </div>
+
+  <div class="studio-remote__workspace">
+    <aside class="studio-remote__panel studio-remote__panel--tools" aria-label="Distortion tools">
+      <h2 class="studio-remote__panel-title">{{ section.settings.tools_label }}</h2>
+      <div class="studio-remote__tool-grid">
+        <button type="button" class="studio-remote__tool" data-studio-tool="stretch">Stretch</button>
+        <button type="button" class="studio-remote__tool" data-studio-tool="expand">Expand</button>
+        <button type="button" class="studio-remote__tool" data-studio-tool="minimize">Minimize</button>
+        <button type="button" class="studio-remote__tool is-active" data-studio-tool="bloat">Bloat</button>
+        <button type="button" class="studio-remote__tool" data-studio-tool="crystallize">Crystallize</button>
+        <button type="button" class="studio-remote__tool" data-studio-tool="color">Color</button>
+        <button type="button" class="studio-remote__tool" data-studio-tool="texture" data-studio-texture-cycle>
+          Texture <span data-studio-texture-label>Smooth</span>
+        </button>
+      </div>
+
+      <div class="studio-remote__sliders">
+        <label class="studio-remote__slider-label">
+          Brush size
+          <input type="range" min="0.1" max="0.8" step="0.05" value="0.35" data-studio-brush-size>
+        </label>
+        <label class="studio-remote__slider-label">
+          Strength
+          <input type="range" min="0.02" max="0.35" step="0.01" value="0.12" data-studio-brush-strength>
+        </label>
+      </div>
+
+      <div class="studio-remote__color-panel" data-studio-color-panel hidden>
+        <label class="studio-remote__slider-label">
+          Paint color
+          <input type="color" value="#2f6bff" data-studio-color>
+        </label>
+      </div>
+    </aside>
+
+    <div class="studio-remote__viewport-wrap">
+      <div class="studio-remote__viewport" data-studio-viewport role="img" aria-label="3D sculpting viewport"></div>
+      <p class="studio-remote__hint" data-studio-hint>
+        Click &amp; drag on the object to mold. Drag empty space to orbit.
+      </p>
+    </div>
+
+    <aside class="studio-remote__panel studio-remote__panel--shapes" aria-label="Base shapes">
+      <h2 class="studio-remote__panel-title">{{ section.settings.shapes_label }}</h2>
+      <div class="studio-remote__shape-grid">
+        <button type="button" class="studio-remote__shape is-active" data-studio-shape="sphere">Sphere</button>
+        <button type="button" class="studio-remote__shape" data-studio-shape="cube">Cube</button>
+        <button type="button" class="studio-remote__shape" data-studio-shape="cylinder">Cylinder</button>
+        <button type="button" class="studio-remote__shape" data-studio-shape="horus">Horus</button>
+        <button type="button" class="studio-remote__shape" data-studio-shape="pyramid">Pyramid</button>
+        <button type="button" class="studio-remote__shape" data-studio-shape="prism">Prism</button>
+      </div>
+
+      <div class="studio-remote__actions">
+        <button type="button" class="studio-remote__btn" data-studio-download-obj>
+          {{ section.settings.download_obj_label }}
+        </button>
+        <button type="button" class="studio-remote__btn" data-studio-download-gltf>
+          {{ section.settings.download_gltf_label }}
+        </button>
+        <button type="button" class="studio-remote__btn studio-remote__btn--ghost" data-studio-reset>
+          {{ section.settings.reset_label }}
+        </button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% stylesheet %}
+  .studio-remote {
+    min-height: 100vh;
+    padding: 10rem 2.4rem 6rem;
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .studio-remote__header {
+    max-width: 120rem;
+    margin: 0 auto 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 3.2rem;
+    align-items: flex-end;
+  }
+
+  .studio-remote__eyebrow {
+    margin: 0 0 1.2rem;
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .studio-remote__heading {
+    margin: 0 0 1.6rem;
+    font-size: clamp(2.8rem, 5vw, 5.6rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .studio-remote__description {
+    margin: 0;
+    max-width: 52rem;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    opacity: 0.75;
+  }
+
+  .studio-remote__serial-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.8rem;
+  }
+
+  .studio-remote__serial-label {
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .studio-remote__serial {
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    padding: 0.8rem 1.2rem;
+    background: rgba(47, 107, 255, 0.08);
+    border: 1px solid rgba(47, 107, 255, 0.25);
+    border-radius: 0.4rem;
+  }
+
+  .studio-remote__workspace {
+    max-width: 120rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 22rem 1fr 22rem;
+    gap: 2.4rem;
+    align-items: start;
+  }
+
+  .studio-remote__panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .studio-remote__panel-title {
+    margin: 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .studio-remote__tool-grid,
+  .studio-remote__shape-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .studio-remote__tool,
+  .studio-remote__shape {
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: inherit;
+    font: inherit;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .studio-remote__tool:hover,
+  .studio-remote__shape:hover,
+  .studio-remote__tool:focus-visible,
+  .studio-remote__shape:focus-visible {
+    border-color: var(--color-accent);
+  }
+
+  .studio-remote__tool.is-active,
+  .studio-remote__shape.is-active {
+    border-color: var(--color-accent);
+    background: rgba(47, 107, 255, 0.12);
+    color: var(--color-accent);
+  }
+
+  .studio-remote__sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 0.8rem;
+  }
+
+  .studio-remote__slider-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .studio-remote__slider-label input[type='range'] {
+    width: 100%;
+    accent-color: var(--color-accent);
+  }
+
+  .studio-remote__color-panel {
+    margin-top: 0.4rem;
+  }
+
+  .studio-remote__color-panel input[type='color'] {
+    width: 100%;
+    height: 3.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .studio-remote__viewport-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .studio-remote__viewport {
+    width: 100%;
+    aspect-ratio: 1;
+    max-height: 72vh;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #0a0a0a;
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .studio-remote__viewport canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .studio-remote__hint {
+    margin: 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    text-align: center;
+  }
+
+  .studio-remote__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+  }
+
+  .studio-remote__btn {
+    appearance: none;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+    font: inherit;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .studio-remote__btn:hover,
+  .studio-remote__btn:focus-visible {
+    opacity: 0.85;
+  }
+
+  .studio-remote__btn--ghost {
+    background: transparent;
+    color: var(--color-accent);
+  }
+
+  @media screen and (max-width: 990px) {
+    .studio-remote__workspace {
+      grid-template-columns: 1fr;
+    }
+
+    .studio-remote__serial-panel {
+      align-items: flex-start;
+    }
+
+    .studio-remote__tool-grid,
+    .studio-remote__shape-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .studio-remote__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .studio-remote__btn {
+      flex: 1 1 auto;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .studio-remote {
+      padding-top: 12rem;
+    }
+
+    .studio-remote__tool-grid,
+    .studio-remote__shape-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+<script src="{{ 'three.min.js' | asset_url }}" defer></script>
+<script src="{{ 'studio-remote-deployment.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.studio_remote_deployment.name",
+  "tag": "section",
+  "class": "section-studio-remote-deployment",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.studio_remote_deployment.settings.eyebrow.label",
+      "default": "Random Object Studio"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.studio_remote_deployment.settings.heading.label",
+      "default": "Remote Deployment"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:sections.studio_remote_deployment.settings.description.label",
+      "default": "Mold digital clay into unique 3D objects. Sculpt with touch or cursor, then download your creation as OBJ or GLTF with a randomly generated serial number."
+    },
+    {
+      "type": "text",
+      "id": "serial_label",
+      "label": "t:sections.studio_remote_deployment.settings.serial_label.label",
+      "default": "Object serial"
+    },
+    {
+      "type": "text",
+      "id": "new_serial_label",
+      "label": "t:sections.studio_remote_deployment.settings.new_serial_label.label",
+      "default": "New serial"
+    },
+    {
+      "type": "text",
+      "id": "tools_label",
+      "label": "t:sections.studio_remote_deployment.settings.tools_label.label",
+      "default": "Distortion"
+    },
+    {
+      "type": "text",
+      "id": "shapes_label",
+      "label": "t:sections.studio_remote_deployment.settings.shapes_label.label",
+      "default": "Base shape"
+    },
+    {
+      "type": "text",
+      "id": "download_obj_label",
+      "label": "t:sections.studio_remote_deployment.settings.download_obj_label.label",
+      "default": "Download OBJ"
+    },
+    {
+      "type": "text",
+      "id": "download_gltf_label",
+      "label": "t:sections.studio_remote_deployment.settings.download_gltf_label.label",
+      "default": "Download GLTF"
+    },
+    {
+      "type": "text",
+      "id": "reset_label",
+      "label": "t:sections.studio_remote_deployment.settings.reset_label.label",
+      "default": "Reset shape"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.studio_remote_deployment.name"
+    }
+  ]
+}
+{% endschema %}

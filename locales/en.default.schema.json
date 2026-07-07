@@ -53,6 +53,41 @@
           "label": "Products to show"
         }
       }
+    },
+    "studio_remote_deployment": {
+      "name": "Random Object Studio — Remote Deployment",
+      "settings": {
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "description": {
+          "label": "Description"
+        },
+        "serial_label": {
+          "label": "Serial label"
+        },
+        "new_serial_label": {
+          "label": "New serial button"
+        },
+        "tools_label": {
+          "label": "Tools panel label"
+        },
+        "shapes_label": {
+          "label": "Shapes panel label"
+        },
+        "download_obj_label": {
+          "label": "Download OBJ button"
+        },
+        "download_gltf_label": {
+          "label": "Download GLTF button"
+        },
+        "reset_label": {
+          "label": "Reset button"
+        }
+      }
     }
   },
   "settings_schema": {
