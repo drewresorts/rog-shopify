@@ -63,15 +63,19 @@
     min-height: var(--hero-min-height);
     overflow: hidden;
     color: #fff;
+    z-index: 1;
   }
 
   .hero-ripples__background {
-    position: absolute;
+    position: fixed;
     inset: 0;
     background-color: #111;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    z-index: 0;
+    transform: translate3d(var(--ripples-parallax-x, 0px), var(--ripples-parallax-y, 0px), 0);
+    will-change: transform;
   }
 
   .hero-ripples__content {
@@ -154,6 +158,11 @@
     pointer-events: auto;
   }
 
+  .hero-ripples__intro,
+  .hero-ripples__scroll-hint {
+    text-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.65);
+  }
+
   @media screen and (max-width: 749px) {
     .hero-ripples__content {
       padding-top: 14rem;
@@ -188,6 +197,18 @@
     window.setTimeout(() => whenRipplesReady(callback), 50);
   }
 
+  function setParallaxFromPointer(target, clientX, clientY) {
+    const x = (clientX / window.innerWidth) * 2 - 1;
+    const y = (clientY / window.innerHeight) * 2 - 1;
+
+    const max = 18;
+    const px = Math.round(x * max);
+    const py = Math.round(y * max);
+
+    target.style.setProperty('--ripples-parallax-x', px + 'px');
+    target.style.setProperty('--ripples-parallax-y', py + 'px');
+  }
+
   function initHeroRipples(section) {
     const target = section.querySelector('[data-ripples-target]');
     const imageUrl = section.dataset.imageUrl;
@@ -212,6 +233,19 @@
       });
     } catch (error) {
       return;
+    }
+
+    if (!window.__rogRipplesGlobalParallaxBound) {
+      window.__rogRipplesGlobalParallaxBound = true;
+      document.addEventListener(
+        'pointermove',
+        (event) => {
+          document.querySelectorAll('[data-ripples-target]').forEach((el) => {
+            setParallaxFromPointer(el, event.clientX, event.clientY);
+          });
+        },
+        { passive: true }
+      );
     }
 
     let lastX = 0;
