@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "studio-remote-deployment",
+      "settings": {
+        "eyebrow": "Random Object Studio",
+        "heading": "Remote Deployment",
+        "description": "Mold digital clay into unique 3D objects. Sculpt with touch or cursor, then download your creation as OBJ or GLTF with a randomly generated serial number.",
+        "serial_label": "Object serial",
+        "new_serial_label": "New serial",
+        "tools_label": "Distortion",
+        "shapes_label": "Base shape",
+        "download_obj_label": "Download OBJ",
+        "download_gltf_label": "Download GLTF",
+        "reset_label": "Reset shape"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
