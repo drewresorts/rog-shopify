@@ -7,7 +7,18 @@
       "settings": {
         "menu": "main-menu"
       }
+    },
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "settings": {
+        "heading": "Your cart",
+        "empty_text": "Your cart is empty.",
+        "checkout_label": "Checkout",
+        "background_type": "color",
+        "background_color": "#0b0b0d",
+        "background_opacity": 90
+      }
     }
   },
-  "order": ["header"]
+  "order": ["header", "cart-drawer"]
 }

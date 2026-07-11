@@ -1,0 +1,78 @@
+{%- liquid
+  assign model_media = item.product.media | where: 'media_type', 'model' | first
+-%}
+
+<li class="cart-drawer__item" data-cart-drawer-item data-line="{{ item_index }}" data-key="{{ item.key }}">
+  <div class="cart-drawer__item-model">
+    {%- if model_media -%}
+      {{
+        model_media
+        | model_viewer_tag:
+          image_size: '300x300',
+          toggleable: false,
+          class: 'cart-drawer__item-model-viewer'
+      }}
+    {%- elsif item.image != blank -%}
+      {{
+        item.image
+        | image_url: width: 200
+        | image_tag: class: 'cart-drawer__item-image-fallback', loading: 'lazy', alt: item.title
+      }}
+    {%- endif -%}
+  </div>
+
+  <div class="cart-drawer__item-details">
+    <a href="{{ item.url }}" class="cart-drawer__item-title">{{ item.product.title }}</a>
+
+    {%- if item.product.has_only_default_variant == false -%}
+      <div
+        class="cart-drawer__item-options"
+        data-cart-drawer-options
+        data-variants="{{ item.product.variants | json | escape }}"
+      >
+        {%- for option in item.product.options_with_values -%}
+          {%- assign selected_value = item.variant.options[forloop.index0] -%}
+          <label class="cart-drawer__option">
+            <span class="cart-drawer__option-label">{{ option.name }}</span>
+            <select class="cart-drawer__option-select" data-option-index="{{ forloop.index0 }}">
+              {%- for value in option.values -%}
+                <option value="{{ value | escape }}" {% if value == selected_value %}selected{% endif %}>
+                  {{ value }}
+                </option>
+              {%- endfor -%}
+            </select>
+          </label>
+        {%- endfor -%}
+        <p class="cart-drawer__option-error" data-cart-drawer-option-error hidden>
+          {{ 'cart.drawer.variant_unavailable' | t }}
+        </p>
+      </div>
+    {%- else -%}
+      <p class="cart-drawer__item-variant">{{ item.variant.title }}</p>
+    {%- endif -%}
+
+    <div class="cart-drawer__item-row">
+      <div class="cart-drawer__quantity">
+        <button type="button" class="cart-drawer__qty-btn" data-cart-qty-decrease aria-label="{{ 'cart.drawer.quantity_decrease' | t }}">
+          &minus;
+        </button>
+        <input
+          type="number"
+          class="cart-drawer__qty-input"
+          data-cart-qty-input
+          min="0"
+          value="{{ item.quantity }}"
+          aria-label="{{ 'cart.drawer.quantity' | t }}"
+        >
+        <button type="button" class="cart-drawer__qty-btn" data-cart-qty-increase aria-label="{{ 'cart.drawer.quantity_increase' | t }}">
+          &plus;
+        </button>
+      </div>
+      <span class="cart-drawer__item-price" data-cart-drawer-item-price>{{ item.final_line_price | money }}</span>
+    </div>
+
+    <button type="button" class="cart-drawer__remove" data-cart-drawer-remove>
+      {{ 'cart.drawer.remove' | t }}
+    </button>
+  </div>
+</li>
