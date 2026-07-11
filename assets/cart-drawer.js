@@ -14,66 +14,23 @@
   var body = root.querySelector('[data-cart-drawer-body]');
   var footer = root.querySelector('[data-cart-drawer-footer]');
 
-  var scriptsLoaded = false;
-  var scriptsLoading = null;
-
-  function loadScript(src) {
-    return new Promise(function (resolve, reject) {
-      var script = document.createElement('script');
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
-  }
-
-  function ensure3DScripts() {
-    if (scriptsLoaded) {
-      return Promise.resolve();
-    }
-    if (scriptsLoading) {
-      return scriptsLoading;
-    }
-
-    var threeUrl = root.dataset.threeUrl;
-    var parserUrl = root.dataset.objParserUrl;
-    var viewerUrl = root.dataset.viewerUrl;
-
-    if (!threeUrl || !parserUrl || !viewerUrl) {
-      return Promise.resolve();
-    }
-
-    // Loaded lazily (only once the drawer is first opened) so the 3D
-    // engine never costs page weight on visitors who never open the cart.
-    scriptsLoading = loadScript(threeUrl)
-      .then(function () {
-        return loadScript(parserUrl);
-      })
-      .then(function () {
-        return loadScript(viewerUrl);
-      })
-      .then(function () {
-        scriptsLoaded = true;
-      })
-      .catch(function () {
-        scriptsLoading = null;
-      });
-
-    return scriptsLoading;
-  }
-
-  function initModels() {
-    ensure3DScripts().then(function () {
-      if (window.ROGCart3D) {
-        window.ROGCart3D.initWithin(root);
+  // Shopify injects the <model-viewer> custom element library itself
+  // whenever the model_viewer_tag filter is used, so there's no library to
+  // load here — just make each rendered viewer a passive, auto-rotating
+  // preview instead of Shopify's default interactive/AR viewer.
+  function enhanceModelViewers(container) {
+    container.querySelectorAll('model-viewer').forEach(function (viewer) {
+      if (viewer.dataset.rogEnhanced) {
+        return;
       }
+      viewer.dataset.rogEnhanced = 'true';
+      viewer.removeAttribute('camera-controls');
+      viewer.setAttribute('auto-rotate', '');
+      viewer.setAttribute('rotation-per-second', '8deg');
+      viewer.setAttribute('interaction-prompt', 'none');
+      viewer.setAttribute('disable-zoom', '');
+      viewer.setAttribute('disable-pan', '');
     });
-  }
-
-  function destroyModels() {
-    if (window.ROGCart3D) {
-      window.ROGCart3D.destroyAll();
-    }
   }
 
   // --- Open / close -------------------------------------------------------
@@ -86,14 +43,13 @@
     root.classList.add('is-open');
     root.setAttribute('aria-hidden', 'false');
     document.documentElement.classList.add('cart-drawer-locked');
-    initModels();
+    enhanceModelViewers(root);
   }
 
   function close() {
     root.classList.remove('is-open');
     root.setAttribute('aria-hidden', 'true');
     document.documentElement.classList.remove('cart-drawer-locked');
-    destroyModels();
   }
 
   document.addEventListener('click', function (event) {
@@ -180,8 +136,6 @@
         var newFooter = parsed.querySelector('[data-cart-drawer-footer]');
         var newCount = parsed.querySelector('[data-cart-drawer-count]');
 
-        destroyModels();
-
         if (body && newBody) {
           body.innerHTML = newBody.innerHTML;
         }
@@ -194,7 +148,7 @@
         });
 
         if (isOpen()) {
-          initModels();
+          enhanceModelViewers(root);
         }
       })
       .catch(function () {

@@ -8,9 +8,6 @@
   class="cart-drawer"
   data-cart-drawer
   aria-hidden="true"
-  data-three-url="{{ 'three.min.js' | asset_url }}"
-  data-obj-parser-url="{{ 'simple-obj-parser.js' | asset_url }}"
-  data-viewer-url="{{ 'cart-3d-viewer.js' | asset_url }}"
   data-cart-add-url="{{ routes.cart_add_url }}"
   data-cart-change-url="{{ routes.cart_change_url }}"
   style="
@@ -261,10 +258,14 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .cart-drawer__item-model canvas {
+  .cart-drawer__item-model-viewer {
     display: block;
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
+    /* Ambient decoration, not an interactive viewer — it shouldn't compete
+       with scrolling the item list or dragging the drawer's close handle. */
+    pointer-events: none;
+    --poster-color: transparent;
   }
 
   .cart-drawer__item-image-fallback {

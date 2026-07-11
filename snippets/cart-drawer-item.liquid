@@ -1,16 +1,18 @@
 {%- liquid
-  assign model_url = item.product.metafields.custom.model_3d_url
+  assign model_media = item.product.media | where: 'media_type', 'model' | first
 -%}
 
 <li class="cart-drawer__item" data-cart-drawer-item data-line="{{ item_index }}" data-key="{{ item.key }}">
-  <div
-    class="cart-drawer__item-model"
-    data-model-viewer
-    {%- if model_url != blank %}
-      data-model-url="{{ model_url | escape }}"
-    {%- endif %}
-  >
-    {%- if model_url == blank and item.image != blank -%}
+  <div class="cart-drawer__item-model">
+    {%- if model_media -%}
+      {{
+        model_media
+        | model_viewer_tag:
+          image_size: '300x300',
+          toggleable: false,
+          class: 'cart-drawer__item-model-viewer'
+      }}
+    {%- elsif item.image != blank -%}
       {{
         item.image
         | image_url: width: 200
