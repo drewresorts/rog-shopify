@@ -10,7 +10,10 @@
         <a class="site-header__link" href="{{ pages.contact.url | default: '/pages/contact' }}">{{ 'header.contact' | t }}</a>
       </li>
       <li class="site-header__item">
-        <a class="site-header__link" href="{{ routes.cart_url }}">{{ 'header.cart' | t }}</a>
+        <a class="site-header__link" href="{{ routes.cart_url }}" data-cart-drawer-open aria-haspopup="dialog">
+          {{ 'header.cart' | t }}
+          <span class="site-header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+        </a>
         <span class="site-header__clock" data-live-clock aria-hidden="true"></span>
       </li>
     </ul>
@@ -60,6 +63,20 @@
     font-size: 1.3rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+  }
+
+  .site-header__cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.8rem;
+    height: 1.8rem;
+    margin-left: 0.6rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 1.05rem;
   }
 {% endstylesheet %}
 

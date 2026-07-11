@@ -14,6 +14,18 @@
     "cart": "Cart",
     "contact": "Contact"
   },
+  "cart": {
+    "drawer": {
+      "close": "Close cart",
+      "drag_to_close": "Drag to close cart",
+      "subtotal": "Subtotal",
+      "remove": "Remove",
+      "quantity": "Quantity",
+      "quantity_increase": "Increase quantity",
+      "quantity_decrease": "Decrease quantity",
+      "variant_unavailable": "That option isn't available."
+    }
+  },
   "sections": {
     "header": {
       "name": "Header",
@@ -83,6 +95,36 @@
         },
         "description": {
           "label": "Description"
+        }
+      }
+    },
+    "cart_drawer": {
+      "name": "Cart drawer",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "empty_text": {
+          "label": "Empty cart message"
+        },
+        "checkout_label": {
+          "label": "Checkout button label"
+        },
+        "background_type": {
+          "label": "Background type",
+          "options": {
+            "color": "Solid color",
+            "image": "Image"
+          }
+        },
+        "background_color": {
+          "label": "Background color"
+        },
+        "background_opacity": {
+          "label": "Background opacity"
+        },
+        "background_image": {
+          "label": "Background image"
         }
       }
     },
