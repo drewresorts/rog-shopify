@@ -9,27 +9,49 @@
         </h2>
       {%- endif -%}
 
-      <ul class="featured-collection__grid" role="list">
-        {%- for product in collection.products limit: section.settings.products_to_show -%}
-          <li class="featured-collection__item">
-            <a class="featured-collection__link" href="{{ product.url }}">
-              {%- if product.featured_image != blank -%}
-                {{
-                  product.featured_image
-                  | image_url: width: 900
-                  | image_tag:
-                    class: 'featured-collection__image',
-                    loading: 'lazy',
-                    widths: '300, 450, 600, 900',
-                    sizes: '(min-width: 990px) 28rem, 80vw',
-                    alt: product.featured_image.alt | default: product.title
-                }}
-              {%- endif -%}
-              <span class="featured-collection__title">{{ product.title }}</span>
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
+      <div
+        class="featured-collection__book"
+        data-flipbook
+        tabindex="0"
+        role="group"
+        aria-label="{{ collection.title | default: 'Product catalog' }}, browse like a book"
+      >
+        <div class="featured-collection__stage" data-flipbook-stage>
+          {%- for product in collection.products limit: section.settings.products_to_show -%}
+            <article class="featured-collection__page" data-flipbook-page>
+              <a class="featured-collection__page-link" href="{{ product.url }}">
+                {%- if product.featured_image != blank -%}
+                  {{
+                    product.featured_image
+                    | image_url: width: 800
+                    | image_tag:
+                      class: 'featured-collection__page-image',
+                      loading: 'lazy',
+                      widths: '300, 450, 600, 800',
+                      sizes: '(min-width: 990px) 26rem, 70vw',
+                      alt: product.featured_image.alt | default: product.title
+                  }}
+                {%- endif -%}
+                <span class="featured-collection__page-title">{{ product.title }}</span>
+                <span class="featured-collection__page-price">{{ product.price | money }}</span>
+              </a>
+              <button type="button" class="featured-collection__page-corner" data-flip-corner aria-label="Turn page">
+                &#8250;
+              </button>
+            </article>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="featured-collection__book-nav">
+        <button type="button" class="featured-collection__nav-btn" data-flip-prev aria-label="Previous page">
+          &#8249; Prev
+        </button>
+        <span class="featured-collection__nav-status" data-flip-status aria-live="polite"></span>
+        <button type="button" class="featured-collection__nav-btn" data-flip-next aria-label="Next page">
+          Next &#8250;
+        </button>
+      </div>
     </div>
   </section>
 {%- endif -%}
@@ -46,55 +68,151 @@
   .featured-collection__inner {
     max-width: 120rem;
     margin: 0 auto;
-  }
-
-  .featured-collection__grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 8rem 2.4rem;
-    justify-items: center;
-  }
-
-  .featured-collection__item {
-    width: min(32rem, 100%);
-  }
-
-  .featured-collection__link {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.6rem;
+    gap: 3.2rem;
+  }
+
+  .featured-collection__book {
+    width: 100%;
+    max-width: 34rem;
+    perspective: 180rem;
+  }
+
+  .featured-collection__book:focus-visible {
+    outline: none;
+  }
+
+  .featured-collection__stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+  }
+
+  .featured-collection__page {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    padding: 2.4rem 2rem;
+    background: rgba(12, 12, 14, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.85s cubic-bezier(0.45, 0.05, 0.15, 1);
+  }
+
+  .featured-collection__page.is-flipped {
+    transform: rotateY(-178deg);
+  }
+
+  .featured-collection__page-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    max-width: 100%;
     color: inherit;
+    text-align: center;
     text-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.65);
   }
 
-  .featured-collection__image {
+  .featured-collection__page-image {
     width: 100%;
-    box-shadow: 0 2.4rem 6rem rgba(0, 0, 0, 0.45);
+    max-width: 22rem;
+    box-shadow: 0 1.6rem 4rem rgba(0, 0, 0, 0.45);
   }
 
-  .featured-collection__title {
-    font-size: 1.3rem;
-    letter-spacing: 0.04em;
+  .featured-collection__page-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+  }
+
+  .featured-collection__page-price {
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    text-align: center;
     color: var(--color-accent);
   }
 
-  @media screen and (min-width: 750px) {
-    .featured-collection__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .featured-collection__page-corner {
+    appearance: none;
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font: inherit;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
   }
 
-  @media screen and (min-width: 990px) {
-    .featured-collection__grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+  .featured-collection__page-corner:hover,
+  .featured-collection__page-corner:focus-visible {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .featured-collection__book-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .featured-collection__nav-btn {
+    appearance: none;
+    border: 1px solid var(--color-accent);
+    background: transparent;
+    color: var(--color-accent);
+    font: inherit;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1rem 1.6rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .featured-collection__nav-btn:hover,
+  .featured-collection__nav-btn:focus-visible {
+    opacity: 0.75;
+  }
+
+  .featured-collection__nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .featured-collection__nav-status {
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    min-width: 5rem;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .featured-collection__book {
+      max-width: 40rem;
     }
   }
 {% endstylesheet %}
+
+<script src="{{ 'featured-flipbook.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

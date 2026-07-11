@@ -1,0 +1,358 @@
+{%- liquid
+  assign background_image = section.settings.background_image
+  assign image_url = background_image | image_url: width: 2400
+-%}
+
+<section
+  id="ContactRipples-{{ section.id }}"
+  class="contact-ripples"
+  data-ripples-section
+  data-image-url="{{ image_url | escape }}"
+>
+  <div class="contact-ripples__background" data-ripples-target aria-hidden="true"></div>
+
+  <div class="contact-ripples__content">
+    <div class="contact-ripples__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="contact-ripples__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h1 class="contact-ripples__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+
+      <hr class="contact-ripples__divider" aria-hidden="true">
+
+      {%- if section.settings.description != blank -%}
+        <div class="contact-ripples__description">{{ section.settings.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="contact-ripples__panel">
+      {%- form 'contact', id: 'ContactRipplesForm', class: 'contact-ripples__form' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="contact-ripples__status contact-ripples__status--success" tabindex="-1" autofocus>
+            {{ 'templates.contact.form.post_success' | t }}
+          </p>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="contact-ripples__status contact-ripples__status--error">
+            <p>{{ 'templates.contact.form.error_heading' | t }}</p>
+            <ul role="list">
+              {%- for field in form.errors -%}
+                <li>
+                  {%- if field == 'form' -%}
+                    {{ form.errors.messages[field] }}
+                  {%- else -%}
+                    {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+
+        <div class="contact-ripples__row">
+          <div class="contact-ripples__field">
+            <label for="ContactRipplesFirstName">{{ 'templates.contact.form.first_name' | t }}</label>
+            <input
+              type="text"
+              id="ContactRipplesFirstName"
+              name="contact[First name]"
+              autocomplete="given-name"
+              required
+              aria-required="true"
+            >
+          </div>
+
+          <div class="contact-ripples__field">
+            <label for="ContactRipplesLastName">{{ 'templates.contact.form.last_name' | t }}</label>
+            <input
+              type="text"
+              id="ContactRipplesLastName"
+              name="contact[Last name]"
+              autocomplete="family-name"
+              required
+              aria-required="true"
+            >
+          </div>
+        </div>
+
+        <div class="contact-ripples__field">
+          <label for="ContactRipplesEmail">{{ 'templates.contact.form.email' | t }}</label>
+          <input
+            type="email"
+            id="ContactRipplesEmail"
+            name="contact[email]"
+            autocomplete="email"
+            autocapitalize="off"
+            spellcheck="false"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            required
+            aria-required="true"
+          >
+        </div>
+
+        <div class="contact-ripples__field">
+          <label for="ContactRipplesPhone">{{ 'templates.contact.form.phone' | t }}</label>
+          <input
+            type="tel"
+            id="ContactRipplesPhone"
+            name="contact[phone]"
+            autocomplete="tel"
+            value="{% if form.phone %}{{ form.phone }}{% endif %}"
+          >
+        </div>
+
+        <div class="contact-ripples__field">
+          <label for="ContactRipplesMessage">{{ 'templates.contact.form.message' | t }}</label>
+          <textarea
+            id="ContactRipplesMessage"
+            name="contact[body]"
+            rows="6"
+            required
+            aria-required="true"
+          >{{ form.body }}</textarea>
+        </div>
+
+        <button type="submit" class="contact-ripples__submit">
+          {{ 'templates.contact.form.send' | t }}
+        </button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .contact-ripples {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    z-index: 1;
+  }
+
+  .contact-ripples__background {
+    position: fixed;
+    inset: 0;
+    background-color: #111;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transform: translate3d(var(--ripples-parallax-x, 0px), var(--ripples-parallax-y, 0px), 0);
+    will-change: transform;
+  }
+
+  .contact-ripples__content {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 4rem;
+    padding: 14rem 2.4rem 6rem;
+  }
+
+  .contact-ripples__intro {
+    max-width: 48rem;
+    text-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.65);
+  }
+
+  .contact-ripples__eyebrow {
+    margin: 0 0 1.2rem;
+    color: var(--color-accent);
+    font-size: 1.2rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .contact-ripples__heading {
+    margin: 0 0 2.4rem;
+    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .contact-ripples__divider {
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.45);
+    margin: 0 0 2.4rem;
+  }
+
+  .contact-ripples__description {
+    max-width: 42rem;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  .contact-ripples__panel {
+    width: 100%;
+    max-width: 52rem;
+  }
+
+  .contact-ripples__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 3.2rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+  }
+
+  .contact-ripples__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .contact-ripples__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .contact-ripples__field label {
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .contact-ripples__field input,
+  .contact-ripples__field textarea {
+    appearance: none;
+    width: 100%;
+    padding: 1.2rem 0;
+    font: inherit;
+    font-size: 1.5rem;
+    color: #fff;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 0;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-ripples__field input:focus-visible,
+  .contact-ripples__field textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  .contact-ripples__submit {
+    appearance: none;
+    align-self: flex-start;
+    border: 1px solid var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+    font: inherit;
+    font-size: 1.2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1.3rem 2.8rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .contact-ripples__submit:hover,
+  .contact-ripples__submit:focus-visible {
+    opacity: 0.85;
+  }
+
+  .contact-ripples__status {
+    margin: 0;
+    padding: 1.2rem 1.6rem;
+    font-size: 1.3rem;
+    line-height: 1.5;
+  }
+
+  .contact-ripples__status ul {
+    margin: 0.8rem 0 0;
+    padding-left: 1.8rem;
+  }
+
+  .contact-ripples__status--success {
+    color: #d9ffe0;
+    background: rgba(46, 160, 67, 0.18);
+    border: 1px solid rgba(46, 160, 67, 0.45);
+  }
+
+  .contact-ripples__status--error {
+    color: #ffd9d9;
+    background: rgba(200, 40, 40, 0.18);
+    border: 1px solid rgba(200, 40, 40, 0.45);
+  }
+
+  @media screen and (min-width: 750px) {
+    .contact-ripples__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .contact-ripples__content {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 48rem);
+      gap: 6rem;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .contact-ripples__content {
+      padding-top: 12rem;
+    }
+
+    .contact-ripples__form {
+      padding: 2.4rem;
+    }
+  }
+{% endstylesheet %}
+
+<script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+<script src="{{ 'jquery.ripples.js' | asset_url }}" defer></script>
+<script src="{{ 'ripples-init.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.contact_ripples.name",
+  "tag": "section",
+  "class": "section-contact-ripples",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:sections.contact_ripples.settings.background_image.label"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.contact_ripples.settings.eyebrow.label",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.contact_ripples.settings.heading.label",
+      "default": "Contact"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.contact_ripples.settings.description.label",
+      "default": "<p>Send us a message and we'll get back to you as soon as we can.</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact_ripples.name"
+    }
+  ]
+}
+{% endschema %}
