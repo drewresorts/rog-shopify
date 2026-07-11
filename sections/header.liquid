@@ -7,6 +7,9 @@
         </li>
       {%- endfor -%}
       <li class="site-header__item">
+        <a class="site-header__link" href="{{ pages.contact.url | default: '/pages/contact' }}">{{ 'header.contact' | t }}</a>
+      </li>
+      <li class="site-header__item">
         <a class="site-header__link" href="{{ routes.cart_url }}">{{ 'header.cart' | t }}</a>
         <span class="site-header__clock" data-live-clock aria-hidden="true"></span>
       </li>

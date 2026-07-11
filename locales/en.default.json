@@ -11,7 +11,8 @@
     "main_navigation": "Main navigation"
   },
   "header": {
-    "cart": "Cart"
+    "cart": "Cart",
+    "contact": "Contact"
   },
   "sections": {
     "header": {
