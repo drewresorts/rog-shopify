@@ -1,8 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_background": "#111111",
     "color_foreground": "#ffffff",
     "color_accent": "#2f6bff",
-    "type_body_font": "assistant_n4"
+    "type_body_font": "anybody_n4",
+    "content_for_index": []
   }
 }
