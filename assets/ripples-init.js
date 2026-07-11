@@ -66,10 +66,12 @@
     var lastX = 0;
     var lastY = 0;
 
-    // Bound on the section (not the background layer) so the ripple keeps
-    // reacting to pointer movement even while it passes over interactive
-    // foreground content, such as form fields, sitting above the background.
-    section.addEventListener('pointermove', function (event) {
+    // Bound on the document (not the section or the background layer) so the
+    // water keeps rippling from pointer movement anywhere on the page — the
+    // fixed, full-viewport background is visible behind every section, and
+    // other page elements (e.g. the floating product book) react to the
+    // same disturbance via the rog:ripple-drop event dispatched below.
+    document.addEventListener('pointermove', function (event) {
       var rect = target.getBoundingClientRect();
       var x = event.clientX - rect.left;
       var y = event.clientY - rect.top;
@@ -84,6 +86,15 @@
         $target.ripples('drop', x, y, 12, 0.02);
         lastX = x;
         lastY = y;
+
+        // Broadcast the drop in viewport coordinates so unrelated page
+        // elements (e.g. the floating product book) can react to the same
+        // water disturbance without coupling to the ripples plugin itself.
+        document.dispatchEvent(
+          new CustomEvent('rog:ripple-drop', {
+            detail: { x: event.clientX, y: event.clientY }
+          })
+        );
       }
     });
 
