@@ -19,7 +19,7 @@
         "mix_label": "June 2026 Mix:",
         "mix_title": "Aural Imbalance",
         "scroll_hint": "Scroll",
-        "min_height": 100
+        "min_height": 65
       }
     },
     "featured_collection": {
@@ -27,7 +27,7 @@
       "settings": {
         "heading": "",
         "collection": "frontpage",
-        "products_to_show": 12
+        "products_to_show": 6
       }
     }
   },
