@@ -11,8 +11,7 @@
     "main_navigation": "Main navigation"
   },
   "header": {
-    "cart": "Cart",
-    "contact": "Contact"
+    "cart": "Cart"
   },
   "sections": {
     "header": {
@@ -69,23 +68,6 @@
         }
       }
     },
-    "contact_ripples": {
-      "name": "Contact with ripples",
-      "settings": {
-        "background_image": {
-          "label": "Background image"
-        },
-        "eyebrow": {
-          "label": "Eyebrow"
-        },
-        "heading": {
-          "label": "Heading"
-        },
-        "description": {
-          "label": "Description"
-        }
-      }
-    },
     "studio_remote_deployment": {
       "name": "Random Object Studio — Remote Deployment",
       "settings": {
@@ -119,20 +101,6 @@
         "reset_label": {
           "label": "Reset button"
         }
-      }
-    }
-  },
-  "templates": {
-    "contact": {
-      "form": {
-        "first_name": "First name",
-        "last_name": "Last name",
-        "email": "Email",
-        "phone": "Phone",
-        "message": "Message",
-        "send": "Send message",
-        "post_success": "Thanks for reaching out. We'll be in touch soon.",
-        "error_heading": "Please correct the following:"
       }
     }
   },
