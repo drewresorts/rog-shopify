@@ -11,8 +11,6 @@
 
   var panel = root.querySelector('[data-cart-drawer-panel]');
   var handle = root.querySelector('[data-cart-drawer-handle]');
-  var body = root.querySelector('[data-cart-drawer-body]');
-  var footer = root.querySelector('[data-cart-drawer-footer]');
 
   // Shopify injects the <model-viewer> custom element library itself
   // whenever the model_viewer_tag filter is used, so there's no library to
@@ -33,6 +31,10 @@
     });
   }
 
+  // Enhance any model-viewers already on the page (e.g. a standalone
+  // product or cart page) without waiting for the drawer to open.
+  enhanceModelViewers(document);
+
   // --- Open / close -------------------------------------------------------
 
   function isOpen() {
@@ -43,7 +45,7 @@
     root.classList.add('is-open');
     root.setAttribute('aria-hidden', 'false');
     document.documentElement.classList.add('cart-drawer-locked');
-    enhanceModelViewers(root);
+    enhanceModelViewers(document);
   }
 
   function close() {
@@ -136,20 +138,26 @@
         var newFooter = parsed.querySelector('[data-cart-drawer-footer]');
         var newCount = parsed.querySelector('[data-cart-drawer-count]');
 
-        if (body && newBody) {
-          body.innerHTML = newBody.innerHTML;
+        // Both the drawer and a standalone cart page (if the current page
+        // has one) share these same markers, so patch every match on the
+        // page rather than a single cached node — whichever UI is visible
+        // stays in sync from this one fetch.
+        if (newBody) {
+          document.querySelectorAll('[data-cart-drawer-body]').forEach(function (el) {
+            el.innerHTML = newBody.innerHTML;
+          });
         }
-        if (footer && newFooter) {
-          footer.innerHTML = newFooter.innerHTML;
+        if (newFooter) {
+          document.querySelectorAll('[data-cart-drawer-footer]').forEach(function (el) {
+            el.innerHTML = newFooter.innerHTML;
+          });
         }
 
         document.querySelectorAll('[data-cart-count]').forEach(function (el) {
           el.textContent = newCount ? newCount.textContent : '0';
         });
 
-        if (isOpen()) {
-          enhanceModelViewers(root);
-        }
+        enhanceModelViewers(document);
       })
       .catch(function () {
         // Leave the drawer showing its last known state on network failure.
@@ -292,4 +300,13 @@
       window.requestAnimationFrame(bob);
     })();
   }
+
+  // Small public surface so other page scripts (e.g. a product page's
+  // add-to-cart form) can refresh the drawer's contents and pop it open
+  // after adding an item, without duplicating the cart-fetch logic.
+  window.ROGCartDrawer = {
+    open: open,
+    close: close,
+    refresh: refreshDrawer
+  };
 })();

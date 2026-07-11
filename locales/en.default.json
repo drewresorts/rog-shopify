@@ -98,6 +98,26 @@
         }
       }
     },
+    "cart_page": {
+      "name": "Cart page",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "empty_text": {
+          "label": "Empty cart message"
+        },
+        "continue_shopping_label": {
+          "label": "Continue shopping link label"
+        },
+        "checkout_label": {
+          "label": "Checkout button label"
+        }
+      }
+    },
+    "product_page": {
+      "name": "Product page"
+    },
     "cart_drawer": {
       "name": "Cart drawer",
       "settings": {
